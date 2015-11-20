@@ -1,0 +1,67 @@
+---
+title       : Estimator for MPG
+subtitle    : Application for calculating the estimated miles per gallon
+author      : Lena Stevanoska
+job         : 
+framework   : io2012   # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : solarized_light      # 
+widgets     : [mathjax]            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+--- bg:snow
+
+## Why "Estimator for MPG"?
+
+
+
+1. Let's you know what you can expect from your car
+2. Just 3 simple parameters required
+3. Intuitive interface
+
+---  bg:snow
+
+## Scientific support
+
+Estimated value is calculated using the following formula
+
+ $Y = \hat \beta_0 + \hat \beta_1 * X_1 + \hat \beta_2 * X_2 + \hat \beta_3 * X_3$
+
+The $\hat \beta_k$ values are calculated using the linear regression model fitted through the mtcars dataset.
+
+```{r model,echo=FALSE}
+  fit<-lm(mpg~factor(am)+wt+cyl,data=mtcars)
+	coeffit<-summary(fit)$coef
+	coeffit
+```
+The $X_k$ values are the entered values:
+* $X_1$ = Transmission type (0 = Automatic, 1 = Manual)
+* $X_2$ = Weight (in $lb/1000$)
+* $X_3$ = Number of cylinders (4, 6, 8)
+
+
+---bg:snow
+
+
+## The data used to create the prediction model
+
+```{r loadlib,echo=FALSE,results='hide',message=FALSE,warning=FALSE}
+library(ggplot2)
+library(datasets)
+
+```
+
+```{r plotwtcyl, echo=FALSE,fig.align='center',fig.height=7,fig.width=11}
+df<-data.frame(mtcars,amcyl=factor(paste(mtcars$am,mtcars$cyl,sep=".")))
+g<-ggplot(df,aes(y=mpg, x=wt,fill="blue"))+geom_boxplot()+facet_wrap( ~ amcyl,ncol=6)+ylab("MPG")+xlab("Weight")
+g<-g+theme_bw()+theme(legend.position="none")+ggtitle("MPG depending of the car weight (grouped by Transmission type.Number of cylinders) ")
+g
+
+```
+
+
+---bg:snow
+
+## Estimator MPG - Live demo
+
+<iframe src='https://lsdev.shinyapps.io/EstimateMPGApp' height='600px'></iframe>
